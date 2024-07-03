@@ -1,33 +1,49 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:movie_app/core/enums.dart';
 import 'package:movie_app/core/extensions.dart';
 import 'package:movie_app/core/paddings_borders.dart';
+import 'package:movie_app/models/movie_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieWatch extends StatefulWidget {
-  const MovieWatch({super.key});
+  const MovieWatch({
+    super.key,
+    required this.movieModel,
+  });
+  final MovieModel movieModel;
 
   @override
   State<MovieWatch> createState() => _MovieWatchState();
 }
 
 class _MovieWatchState extends State<MovieWatch> {
-  final YoutubePlayerController _controller = YoutubePlayerController(
-    initialVideoId: 'rlR4PJn8b8I',
-    flags: const YoutubePlayerFlags(
-      autoPlay: false,
-      mute: false,
-    ),
-  );
+  late final YoutubePlayerController _controller;
+  late final MovieModel _model;
+
+  @override
+  void initState() {
+    super.initState();
+    _model = widget.movieModel;
+    _controller = YoutubePlayerController(
+      initialVideoId: _model.youtubeId ?? 'rlR4PJn8b8I',
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+  }
 
   bool _isClickPlay = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(_model.name ?? ""),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -58,18 +74,14 @@ class _MovieWatchState extends State<MovieWatch> {
                   : Stack(
                       alignment: Alignment.center,
                       children: [
-                        Image.asset(
-                            height: 250,
-                            width: context.deviceWidth,
-                            fit: BoxFit.cover,
-                            MovieNameEnum.game_of_thrones.movieImage),
+                        Image.network(height: 250, width: context.deviceWidth, fit: BoxFit.cover, _model.image ?? ""),
                         BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                           child: Container(
                             color: Colors.black.withOpacity(0),
                           ),
                         ),
-                        Image.asset(height: 250, width: 250, MovieNameEnum.game_of_thrones.movieImage),
+                        Image.network(height: 250, width: 250, _model.image ?? ""),
                       ],
                     ),
             ),
@@ -109,12 +121,10 @@ class _MovieWatchState extends State<MovieWatch> {
                     padding: PaddingBorderConstant.paddingVertical,
                     child: Text(
                       maxLines: 3,
-                      "Nulla veniam do irure id reprehenderit tempor voluptate aute. Fugiat anim aliqua excepteur ea id aute nulla est cupidatat. Aliqua deserunt qui duis irure ex qui. Culpa eiusmod fugiat aute aliqua",
+                      _model.description ?? "",
                       style: context.textTheme.titleSmall,
                     ),
                   ),
-                  const Text(
-                      "Anim do sint ut elit. Veniam sunt culpa dolore. Enim magna nisi deserunt esse adipisicing dolor exercitation"),
                   Padding(
                     padding: PaddingBorderConstant.paddingVerticalHigh,
                     child: Row(
@@ -157,8 +167,8 @@ class _MovieWatchState extends State<MovieWatch> {
                         title: Row(
                           children: [
                             Stack(alignment: Alignment.center, children: [
-                              Image.asset(
-                                MovieNameEnum.game_of_thrones.movieImage,
+                              Image.network(
+                                _model.image ?? "",
                                 height: 90,
                               ),
                               const Icon(
@@ -169,7 +179,7 @@ class _MovieWatchState extends State<MovieWatch> {
                             Padding(
                               padding: PaddingBorderConstant.paddingOnlyLeftMedium,
                               child: Text(
-                                "$index. Winter is coming",
+                                "$index. ${_model.name}",
                                 style: context.textTheme.bodyMedium,
                               ),
                             )

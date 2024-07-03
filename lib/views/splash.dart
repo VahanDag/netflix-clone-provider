@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:movie_app/routers.dart';
+import 'package:movie_app/service/firebase_service.dart';
+import 'package:movie_app/views/auth/login.dart';
+import 'package:provider/provider.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -18,15 +21,28 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
-    )..addStatusListener((status) {
+    );
+    // ..addStatusListener((status) {
+    //     if (status == AnimationStatus.completed) {
+    //       Navigator.pushReplacement(
+    //         context,
+    //         MaterialPageRoute(builder: (context) => const Routers()),
+    //       );
+    //     }
+    //   });
+    runSplashAndGetData();
+  }
+
+  Future<void> runSplashAndGetData() async {
+    final user = await context.read<FirebaseService>().fetchUserData();
+    _controller.addStatusListener(
+      (status) {
         if (status == AnimationStatus.completed) {
           Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const Routers()),
-          );
+              context, MaterialPageRoute(builder: (context) => user != null ? const Routers() : const LoginPage()));
         }
-      });
-
+      },
+    );
     _controller.forward();
   }
 
