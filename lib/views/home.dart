@@ -4,7 +4,6 @@ import 'package:movie_app/core/enums.dart';
 import 'package:movie_app/core/extensions.dart';
 import 'package:movie_app/core/paddings_borders.dart';
 import 'package:movie_app/models/movie_model.dart';
-import 'package:movie_app/models/user_model.dart';
 import 'package:movie_app/service/firebase_service.dart';
 import 'package:movie_app/views/movie_watch.dart';
 import 'package:provider/provider.dart';
@@ -25,22 +24,6 @@ class _HomeState extends State<Home> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ElevatedButton(
-                onPressed: () async {
-                  // final model = MovieModel(
-                  //     image: "https://fr.web.img5.acsta.net/pictures/19/06/18/12/11/3956503.jpg",
-                  //     movieId: Random().nextInt(100) + 250,
-                  //     name: "Breaking Bad",
-                  //     youtubeId: "HhesaQXLuRY",
-                  //     description:
-                  //         "A high school chemistry teacher turned methamphetamine producer partners with a former student to secure his family's future.");
-                  // await FirebaseFirestore.instance.collection("movies").doc(model.name).set(model.toMap());
-                  final model = context.read<UserModel>();
-                  print(model.email);
-                  print(model.name);
-                  print(model.movieList);
-                },
-                child: const Text("data")),
             Stack(
               children: [
                 Container(
